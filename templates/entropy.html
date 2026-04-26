@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Entropy Analyzer</title>
+    <style>
+        body {
+            background-color: #071e3d;
+            color: #00ff00;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        input {
+            margin: 10px;
+            padding: 10px;
+        }
+
+        .high { color: red; }
+        .mid { color: orange; }
+        .low { color: lightgreen; }
+    </style>
+</head>
+<body>
+
+<h1>Entropy Analyzer</h1>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="color:red;">
+      {% for m in messages %}
+        <p>{{ m }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" required><br>
+    <input type="submit" value="Analyze">
+</form>
+
+{% if entropy %}
+<h2>Results</h2>
+
+<p><b>File:</b> {{ filename }}</p>
+<p><b>Entropy:</b> {{ entropy }}</p>
+
+<p>
+<b>Risk:</b>
+<span class="{% if risk.startswith('High') %}high{% elif risk=='Suspicious' %}mid{% else %}low{% endif %}">
+    {{ risk }}
+</span>
+</p>
+
+{% endif %}
+
+<br>
+<a href="/">⬅ Back</a>
+
+</body>
+</html>

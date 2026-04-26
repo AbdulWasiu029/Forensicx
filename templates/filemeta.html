@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Metadata Analyzer</title>
+    <style>
+        body {
+            background-color: #071e3d;
+            color: #00ff00;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px solid #00ff00;
+            padding: 10px;
+        }
+
+        input {
+            margin: 10px;
+            padding: 10px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>File Metadata Analyzer</h1>
+
+<!-- 🔥 FLASH MESSAGE -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="error">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <br>
+    <input type="submit" value="Analyze">
+</form>
+
+{% if metadata %}
+<h2>Results</h2>
+<table>
+{% for key, value in metadata.items() %}
+<tr>
+    <td>{{ key }}</td>
+    <td>{{ value }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+
+<br>
+<a href="/">⬅ Back</a>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Metadata Analyzer</title>
+    <style>
+        body {
+            background-color: #071e3d;
+            color: #00ff00;
+            font-family: monospace;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        input {
+            margin: 10px;
+            padding: 10px;
+        }
+
+        .btn {
+            background: #00ff00;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Image Metadata Analyzer</h1>
+
+<!-- 🔥 FLASH MESSAGE -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="error">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".jpg,.jpeg,.png" required><br>
+    <input class="btn" type="submit" value="Analyze">
+</form>
+
+<br>
+<a href="/">⬅ Back</a>
+
+</body>
+</html>
