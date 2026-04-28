@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: monospace;
+            background: #0b1a2f;
+            color: #d4af37;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            background: #111;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: 0.3s;
+            padding-top: 20px;
+        }
+
+        .sidebar.hidden {
+            left: -220px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: gold;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            color: #d4af37;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+        }
+
+        .sidebar a:hover {
+            background: gold;
+            color: black;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 220px;
+            padding: 20px;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .main.full {
+            margin-left: 0;
+        }
+
+        /* TOGGLE */
+        .toggle-btn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: gold;
+            color: black;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffd700;
+        }
+
+        /* CARDS */
+        .card {
+            background: #111;
+            border: 1px solid gold;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px solid gold;
+            padding: 8px;
+        }
+
+        /* IMAGE */
+        img {
+            display: block;
+            margin: 0 auto 15px auto;
+            border: 2px solid gold;
+        }
+
+        .danger {
+            color: red;
+            font-weight: bold;
+        }
+
+        ul {
+            text-align: left;
+        }
+    </style>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebar");
+            let main = document.getElementById("main");
+
+            sidebar.classList.toggle("hidden");
+            main.classList.toggle("full");
+
+            localStorage.setItem("sidebarHidden", sidebar.classList.contains("hidden"));
+        }
+
+        window.onload = function () {
+            let hidden = localStorage.getItem("sidebarHidden") === "true";
+
+            if (hidden) {
+                document.getElementById("sidebar").classList.add("hidden");
+                document.getElementById("main").classList.add("full");
+            }
+        };
+    </script>
+
+</head>
+
+<body>
+
+<!-- TOGGLE -->
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <h2>ForensiX</h2>
+    <a href="/">Home</a>
+    <a href="/system">Processes</a>
+    <a href="/network">Network</a>
+    <a href="/registry">Registry</a>
+    <a href="/meta">Image Metadata</a>
+    <a href="/filemeta">File Metadata</a>
+    <a href="/detect">File Type</a>
+    <a href="/entropy">Entropy</a>
+    <a href="/integrity">Integrity</a>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+<h1>Analysis Results</h1>
+
+<!-- IMAGE CARD -->
+<div class="card">
+    <img src="{{ url_for('static', filename=filename) }}" width="200">
+</div>
+
+<!-- FILE INFO -->
+<div class="card">
+    <table>
+        <tr><td>File</td><td>{{ filename }}</td></tr>
+        <tr><td>MD5</td><td>{{ md5 }}</td></tr>
+        <tr><td>SHA256</td><td>{{ sha256 }}</td></tr>
+
+        <tr>
+        <td>Status</td>
+        <td>
+        {% if suspicious %}
+            <span class="danger">Suspicious</span>
+        {% else %}
+            Safe
+        {% endif %}
+        </td>
+        </tr>
+
+        <tr>
+        <td>GPS</td>
+        <td>
+        {% if gps_data %}
+            {{ gps_data[0] }}, {{ gps_data[1] }}
+        {% else %}
+            No GPS
+        {% endif %}
+        </td>
+        </tr>
+    </table>
+</div>
+
+<!-- METADATA -->
+<div class="card">
+    <h3>Metadata</h3>
+
+    {% if exif_data %}
+    <ul>
+        {% for k,v in exif_data.items() %}
+        <li>{{ k }} : {{ v }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No EXIF Data</p>
+    {% endif %}
+</div>
+
+</div>
+
+</body>
+</html>

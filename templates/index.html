@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ForensiX</title>
+
+    <style>
+        body {
+            background: #0b1a2f;
+            color: #d4af37;
+            font-family: monospace;
+            margin: 0;
+
+            /* CENTER EVERYTHING */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 40px;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        /* 🔥 TEAM TEXT (FIXED) */
+        .team {
+            font-size: 14px;
+            color: #bbb;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 200px);
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* CARDS */
+        .card {
+            background: #1c1c1c;
+            border: 1px solid #d4af37;
+            padding: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            color: #d4af37;
+            text-align: center;
+        }
+
+        .card:hover {
+            background: #d4af37;
+            color: black;
+            transform: scale(1.05);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: repeat(2, 200px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Welcome to ForensiX</h1>
+<h2>Digital Forensic Toolkit</h2>
+
+<!-- ✅ CLEAN TEAM TEXT -->
+<div class="team">
+    By Yousra (020), Abdul Wasiu (029), Bushra (045)
+</div>
+
+<div class="grid">
+
+    <a href="/system" class="card">
+        <h3>System Processes</h3>
+    </a>
+
+    <a href="/network" class="card">
+        <h3>Network Monitor</h3>
+    </a>
+
+    <a href="/registry" class="card">
+        <h3>Registry Analyzer</h3>
+    </a>
+
+    <a href="/meta" class="card">
+        <h3>Image Metadata</h3>
+    </a>
+
+    <a href="/filemeta" class="card">
+        <h3>File Metadata</h3>
+    </a>
+
+    <a href="/detect" class="card">
+        <h3>File Type Detector</h3>
+    </a>
+
+    <a href="/entropy" class="card">
+        <h3>Entropy Analyzer</h3>
+    </a>
+
+    <a href="/integrity" class="card">
+        <h3>Integrity Checker</h3>
+    </a>
+
+</div>
+
+</body>
+</html>

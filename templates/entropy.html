@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Entropy Analyzer</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: monospace;
+            background: #0b1a2f;
+            color: #d4af37;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            background: #111;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: 0.3s;
+            padding-top: 20px;
+        }
+
+        .sidebar.hidden {
+            left: -220px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: gold;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            color: #d4af37;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+        }
+
+        .sidebar a:hover {
+            background: gold;
+            color: black;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 220px;
+            padding: 20px;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .main.full {
+            margin-left: 0;
+        }
+
+        /* TOGGLE */
+        .toggle-btn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: gold;
+            color: black;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffd700;
+        }
+
+        /* CARD */
+        .card {
+            background: #111;
+            border: 1px solid gold;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* INPUT */
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            background: #1c1c1c;
+            color: gold;
+            border: 1px solid gold;
+        }
+
+        input[type="submit"] {
+            background: gold;
+            color: black;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background: #d4af37;
+        }
+
+        /* RESULT COLORS */
+        .ok {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .warn {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .bad {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebar");
+            let main = document.getElementById("main");
+
+            sidebar.classList.toggle("hidden");
+            main.classList.toggle("full");
+
+            localStorage.setItem("sidebarHidden", sidebar.classList.contains("hidden"));
+        }
+
+        window.onload = function () {
+            let hidden = localStorage.getItem("sidebarHidden") === "true";
+
+            if (hidden) {
+                document.getElementById("sidebar").classList.add("hidden");
+                document.getElementById("main").classList.add("full");
+            }
+        };
+    </script>
+
+</head>
+
+<body>
+
+<!-- TOGGLE -->
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <h2>ForensiX</h2>
+    <a href="/">Home</a>
+    <a href="/system">Processes</a>
+    <a href="/network">Network</a>
+    <a href="/registry">Registry</a>
+    <a href="/meta">Image Metadata</a>
+    <a href="/filemeta">File Metadata</a>
+    <a href="/detect">File Type</a>
+    <a href="/entropy">Entropy</a>
+    <a href="/integrity">Integrity</a>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+<!-- UPLOAD -->
+<div class="card">
+    <h1>Entropy Analyzer</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <input type="submit" value="Analyze">
+    </form>
+</div>
+
+<!-- RESULT -->
+{% if entropy %}
+<div class="card">
+    <h2>Results</h2>
+
+    <p><b>File:</b> {{ filename }}</p>
+    <p><b>Entropy:</b> {{ entropy }}</p>
+
+    <p>
+    <b>Risk:</b>
+    <span class="{% if risk.startswith('High') %}bad{% elif risk=='Suspicious' %}warn{% else %}ok{% endif %}">
+        {{ risk }}
+    </span>
+    </p>
+
+</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>

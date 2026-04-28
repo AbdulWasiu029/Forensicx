@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>System Processes</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: monospace;
+            background: #0b1a2f;
+            color: #d4af37;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            background: #111;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: 0.3s;
+            padding-top: 20px;
+        }
+
+        .sidebar.hidden {
+            left: -220px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: gold;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            color: #d4af37;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+        }
+
+        .sidebar a:hover {
+            background: gold;
+            color: black;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 220px;
+            padding: 20px;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .main.full {
+            margin-left: 0;
+        }
+
+        /* TOGGLE */
+        .toggle-btn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: gold;
+            color: black;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffd700;
+        }
+
+        /* TABS */
+        .tabs {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tabs button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            background: #1c1c1c;
+            color: gold;
+            border: 1px solid gold;
+        }
+
+        .tabs button.active {
+            background: gold;
+            color: black;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #111;
+        }
+
+        th, td {
+            border: 1px solid gold;
+            padding: 8px;
+            font-size: 13px;
+        }
+
+        th {
+            background: #222;
+        }
+
+        tr:hover {
+            background: #222;
+        }
+
+        .danger {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebar");
+            let main = document.getElementById("main");
+
+            sidebar.classList.toggle("hidden");
+            main.classList.toggle("full");
+
+            localStorage.setItem("sidebarHidden", sidebar.classList.contains("hidden"));
+        }
+
+        function showTab(tab) {
+            document.getElementById("all").style.display = "none";
+            document.getElementById("sus").style.display = "none";
+
+            document.getElementById(tab).style.display = "block";
+
+            document.getElementById("btnAll").classList.remove("active");
+            document.getElementById("btnSus").classList.remove("active");
+
+            if (tab === "all") {
+                document.getElementById("btnAll").classList.add("active");
+            } else {
+                document.getElementById("btnSus").classList.add("active");
+            }
+
+            localStorage.setItem("sysTab", tab);
+        }
+
+        window.onload = function () {
+            let savedTab = localStorage.getItem("sysTab") || "all";
+            showTab(savedTab);
+
+            let hidden = localStorage.getItem("sidebarHidden") === "true";
+            if (hidden) {
+                document.getElementById("sidebar").classList.add("hidden");
+                document.getElementById("main").classList.add("full");
+            }
+        };
+    </script>
+
+</head>
+
+<body>
+
+<!-- TOGGLE -->
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <h2>ForensiX</h2>
+    <a href="/">Home</a>
+    <a href="/system">Processes</a>
+    <a href="/network">Network</a>
+    <a href="/registry">Registry</a>
+    <a href="/meta">Image Metadata</a>
+    <a href="/filemeta">File Metadata</a>
+    <a href="/detect">File Type</a>
+    <a href="/entropy">Entropy</a>
+    <a href="/integrity">Integrity</a>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+<h1>System Processes</h1>
+
+<!-- TABS -->
+<div class="tabs">
+    <button id="btnAll" onclick="showTab('all')">All Processes</button>
+    <button id="btnSus" onclick="showTab('sus')">Suspicious</button>
+</div>
+
+<!-- ALL -->
+<div id="all">
+<table>
+<tr>
+<th>PID</th>
+<th>Name</th>
+<th>CPU %</th>
+<th>Memory %</th>
+<th>Disk</th>
+<th>Status</th>
+</tr>
+
+{% for p in processes %}
+<tr>
+<td>{{ p.pid }}</td>
+<td>{{ p.name }}</td>
+<td class="{% if p.cpu > 40 %}danger{% endif %}">{{ p.cpu }}</td>
+<td class="{% if p.memory > 25 %}danger{% endif %}">{{ p.memory }}</td>
+<td>{{ p.disk }}</td>
+<td>{{ p.status }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<!-- SUSPICIOUS -->
+<div id="sus" style="display:none;">
+<table>
+<tr>
+<th>PID</th>
+<th>Name</th>
+<th>CPU</th>
+<th>Memory</th>
+<th>Reason</th>
+</tr>
+
+{% for p in suspicious %}
+<tr class="danger">
+<td>{{ p.pid }}</td>
+<td>{{ p.name }}</td>
+<td>{{ p.cpu }}</td>
+<td>{{ p.memory }}</td>
+<td>{{ p.reason }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+</div>
+
+</body>
+</html>

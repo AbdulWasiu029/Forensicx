@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Metadata Analyzer</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: monospace;
+            background: #0b1a2f;
+            color: #d4af37;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            background: #111;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: 0.3s;
+            padding-top: 20px;
+        }
+
+        .sidebar.hidden {
+            left: -220px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: gold;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            color: #d4af37;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+        }
+
+        .sidebar a:hover {
+            background: gold;
+            color: black;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 220px;
+            padding: 40px;
+            width: 100%;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main.full {
+            margin-left: 0;
+        }
+
+        /* TOGGLE */
+        .toggle-btn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: gold;
+            color: black;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        /* CARD */
+        .card {
+            background: #111;
+            border: 1px solid gold;
+            padding: 30px;
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            margin: 15px 0;
+            padding: 10px;
+            width: 100%;
+            background: #1c1c1c;
+            color: gold;
+            border: 1px solid gold;
+        }
+
+        .btn {
+            background: gold;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #d4af37;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebar");
+            let main = document.getElementById("main");
+
+            sidebar.classList.toggle("hidden");
+            main.classList.toggle("full");
+
+            localStorage.setItem("sidebarHidden", sidebar.classList.contains("hidden"));
+        }
+
+        window.onload = function () {
+            let hidden = localStorage.getItem("sidebarHidden") === "true";
+
+            if (hidden) {
+                document.getElementById("sidebar").classList.add("hidden");
+                document.getElementById("main").classList.add("full");
+            }
+        };
+    </script>
+
+</head>
+
+<body>
+
+<!-- TOGGLE -->
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <h2>ForensiX</h2>
+    <a href="/">Home</a>
+    <a href="/system">Processes</a>
+    <a href="/network">Network</a>
+    <a href="/registry">Registry</a>
+    <a href="/meta">Image Metadata</a>
+    <a href="/filemeta">File Metadata</a>
+    <a href="/detect">File Type</a>
+    <a href="/entropy">Entropy</a>
+    <a href="/integrity">Integrity</a>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+<div class="card">
+
+<h1>Image Metadata Analyzer</h1>
+
+<!-- FLASH -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="error">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".jpg,.jpeg,.png" required>
+    <input class="btn" type="submit" value="Analyze">
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>
